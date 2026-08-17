@@ -10,6 +10,14 @@ ifeq ($(wildcard $(TARGET_CC)),)
 $(error set ANDROID_NDK_HOME to an Android NDK containing $(TARGET_CC))
 endif
 
+ifeq ($(findstring e3q,$(TARGET)),e3q)
+STABLE_RACE_FLAG := -DAPP_S928_STABLE_RACE=1
+else ifeq ($(findstring e1q,$(TARGET)),e1q)
+STABLE_RACE_FLAG := -DAPP_S921_STABLE_RACE=1
+else
+STABLE_RACE_FLAG :=
+endif
+
 PRELOAD := $(OUTDIR)/cve-2026-43499
 APP_PRELOAD := $(OUTDIR)/cve-2026-43499-app.so
 APP_RELEASE := $(OUTDIR)/cve-2026-43499-app.release.so
@@ -76,7 +84,7 @@ $(APP_RELEASE): $(APP_PRELOAD_SRCS) $(TARGET_HEADER) src/offset.h src/common.h s
 	truncate -s $(APP_RELEASE_SIZE) $@
 
 $(APP_STABLE): $(APP_PRELOAD_SRCS) $(TARGET_HEADER) src/offset.h src/common.h src/kernelsnitch/*.h | $(OUTDIR)
-	$(TARGET_CC) -DAPP_PAYLOAD=1 -DAPP_S928_STABLE_RACE=1 \
+	$(TARGET_CC) -DAPP_PAYLOAD=1 $(STABLE_RACE_FLAG) \
 	  -fPIC -Oz -g0 -fvisibility=hidden -fno-semantic-interposition \
 	  -fstack-protector-strong \
 	  -fno-unwind-tables -fno-asynchronous-unwind-tables \
