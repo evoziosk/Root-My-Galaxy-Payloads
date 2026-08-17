@@ -188,7 +188,6 @@
       "kernelVersions": [
         "6.1.145"
       ],
-      "requiresFreshP0Session": true,
       "exploit": {
         "url": "https://raw.githubusercontent.com/evoziosk/Root-My-Galaxy-Payloads/main/artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so",
         "size": 104128
