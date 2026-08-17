@@ -106,16 +106,23 @@ source offset `(probe - slide)`; the runtime converts it back to a slide.
 
 ## Stage 6: Payload build
 
-Status: **COMPLETE**
+Status: **COMPLETE for reproducible stable build**
+
+The release command was:
 
 ```sh
 make TARGET=e1q-S921USQS6DZF2 \
-  ANDROID_NDK_HOME=/path/to/android-ndk-r29 release
+  ANDROID_NDK_HOME=/path/to/android-ndk-r29 stable
 ```
 
-| File | Size (bytes) | SHA-256 |
-| --- | ---: | --- |
-| `artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so` | 104,128 | `bcc9455118579502803be1b36321b9aac9d1945ef083b06fd638f7c0a833cac7` |
+The stable AArch64 application payload is padded to 104,128 bytes. Repeated
+builds produce the same SHA-256:
+
+```text
+artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so
+size 104128
+SHA-256 5f2dca89c042b35a737c84ba4df7be675013f586a99e4fc4054dcf8f9fa8418a
+```
 
 ## Stage 7: KernelSU late-load artifacts
 
