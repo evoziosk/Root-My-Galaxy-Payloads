@@ -115,7 +115,7 @@ make TARGET=e1q-S921USQS6DZF2 \
 
 | File | Size (bytes) | SHA-256 |
 | --- | ---: | --- |
-| `artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so` | 104,128 | `6268f990e1decae6e0deda2c3cbb7be97dc63bb79c02894f3baf12a1e715dc1f` |
+| `artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so` | 104,128 | `bcc9455118579502803be1b36321b9aac9d1945ef083b06fd638f7c0a833cac7` |
 
 ## Stage 7: KernelSU late-load artifacts
 
