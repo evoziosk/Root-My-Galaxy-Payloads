@@ -1,3 +1,6 @@
+// P0 fingerprint for S921USQS6DZF2 S921USQS6DZF2.
+// Each row maps an actual P0/KASLR slide to bytes at raw offset P0_ORACLE_PROBE_OFFSET - slide.
+// APP_P0_FINGERPRINT_INVERSE_SLIDE=1: the row key is the physical source offset; the runtime converts it to a slide via probe - source.
 #ifndef P0_FINGERPRINT_H
 #define P0_FINGERPRINT_H
 
