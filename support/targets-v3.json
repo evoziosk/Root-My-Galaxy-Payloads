@@ -179,7 +179,7 @@
       }
     },
     {
-      "payloadId": "e1s-S921USQS6DZF2",
+      "payloadId": "e1q-S921USQS6DZF2",
       "displayName": "Galaxy S24 (US) | Kernel 6.1.145",
       "models": [
         "SM-S921U",
@@ -190,11 +190,11 @@
       ],
       "requiresFreshP0Session": true,
       "exploit": {
-        "url": "https://raw.githubusercontent.com/evoziosk/Root-My-Galaxy-Payloads/main/artifacts/e1s-S921USQS6DZF2/cve-2026-43499-app.so",
+        "url": "https://raw.githubusercontent.com/evoziosk/Root-My-Galaxy-Payloads/main/artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so",
         "size": 104128
       },
       "kernelsu": {
-        "url": "https://raw.githubusercontent.com/evoziosk/Root-My-Galaxy-Payloads/main/kernelsu/ksud-e1s-S921USQS6DZF2-kdp",
+        "url": "https://raw.githubusercontent.com/evoziosk/Root-My-Galaxy-Payloads/main/kernelsu/ksud-e1q-S921USQS6DZF2-kdp",
         "size": 4779160
       }
     }
