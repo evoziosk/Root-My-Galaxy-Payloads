@@ -119,25 +119,27 @@ make TARGET=e1q-S921USQS6DZF2 \
 
 ## Stage 7: KernelSU late-load artifacts
 
-Status: **KO PENDING REBUILD**
+Status: **COMPLETE**
 
-The file `kernelsu/android14-6.1_kernelsu-e1q-S921USQS6DZF2-kdp.ko` currently
-carries vermagic `6.1.145-android14-11-33419968-abS928USQS6DZF2` (built for
-the e3q kernel, not e1q). It will be rejected by the e1q kernel at load time.
-
-It must be rebuilt using DDK image `ghcr.io/ylarod/ddk-min:android14-6.1-20260313`
-with the UTS_RELEASE set to the exact e1q kernel release string:
+The `android14-6.1_kernelsu-e1q-S921USQS6DZF2-kdp.ko` module was rebuilt using
+the exact e1q kernel release string:
 
 ```text
 6.1.145-android14-11-33419968-abS921USQS6DZF2
 ```
 
-Follow the same procedure as the e3q build in `kernelsu/README.md`, auditing
-against the e1q `vmlinux.elf` (SHA-256:
-`6ca89d7905500bf9106f92ba38b29deae0fbfb90ab876a996c11c9b318ce5be7`).
+It was audited against `/home/evo/devl/vmlinux.elf`, finding 209 undefined
+imports and 0 missing target symbols, with a zero-length `__versions` section.
 
-After rebuilding the KO, also rebuild `ksud-e1q-S921USQS6DZF2-kdp` since it
-embeds the `android14-6.1_kernelsu.ko` asset.
+```text
+android14-6.1_kernelsu-e1q-S921USQS6DZF2-kdp.ko
+size: 400152
+SHA-256: c8293f8375ef736f42bce654b0deafa70cccc62286575153c2a49c14098425c9
+
+ksud-e1q-S921USQS6DZF2-kdp
+size: 4779088
+SHA-256: 3cbf42ba320785078c65b9a9b14b3d5331674927ade771a2134df0738376631d
+```
 
 ## Support feed
 
