@@ -1,2 +1,6 @@
 /build/
 /diagnostics/
+ndk.zip
+
+android-ndk-r29
+*.swp
