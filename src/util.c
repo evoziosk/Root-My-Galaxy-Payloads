@@ -859,6 +859,7 @@ int prepare_skb_payload(uintptr_t base, int payload_mode) {
                        KIMAGE_TEXT_BASE +
                        SLIDE_S928_PROBE_TARGET_IMAGE_OFF) +
                    slide_p0_offset;
+          p0_probe_page_struct = direct_to_page(base);
 #else
           uintptr_t direct_addr =
               P0_DATA_ALIAS_CONST(KIMAGE_TEXT_BASE) +
