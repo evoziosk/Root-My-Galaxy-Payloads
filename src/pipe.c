@@ -90,7 +90,33 @@ void init_ctx(struct mm_ctx *ctx, size_t cnt) {
 }
 
 void resize_pipe_slots(int pipefd[2], size_t slots) {
-  SYSCHK(fcntl(pipefd[0], F_SETPIPE_SZ, slots * PAGE_SIZE));
+  int ret = fcntl(pipefd[0], F_SETPIPE_SZ, (int)(slots * PAGE_SIZE));
+  if (ret != -1) {
+    return;
+  }
+  if (errno != EPERM && errno != EINVAL) {
+    pr_error("SYSCHK(fcntl(pipefd[0], F_SETPIPE_SZ, slots * PAGE_SIZE)): %m\n");
+  }
+  /* Kernel rejected the requested size (EPERM/EINVAL). Binary-search for the
+   * largest capacity this kernel will grant to an unprivileged caller.
+   * Never go below 2 slots (the minimum pipe ring size). */
+  size_t lo = 2, hi = slots - 1, best = 2;
+  while (lo <= hi) {
+    size_t mid = lo + (hi - lo) / 2;
+    int r = fcntl(pipefd[0], F_SETPIPE_SZ, (int)(mid * PAGE_SIZE));
+    if (r != -1) {
+      best = mid;
+      lo = mid + 1;
+    } else {
+      if (hi == 0) break;
+      hi = mid - 1;
+    }
+  }
+  if (best != slots) {
+    pr_warning("pipe resize %zu→%zu slots (kernel denied %zu)\n",
+               slots, best, slots);
+  }
+  fcntl(pipefd[0], F_SETPIPE_SZ, (int)(best * PAGE_SIZE));
 }
 
 void make_pipe_object(int pipefd[2]) {
