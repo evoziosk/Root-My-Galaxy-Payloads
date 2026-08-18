@@ -67,8 +67,8 @@ Image base: `0xffffffc008000000`
 | `ASHMEM_SHOW_FDINFO_OFF` | `ashmem_show_fdinfo` | `0x00d3b078` |
 | `ANON_PIPE_BUF_OPS_OFF` | `anon_pipe_buf_ops` | `0x01219d90` |
 | `ASHMEM_FOPS_OFF` | `ashmem_fops` | `0x013d1140` |
-| `SLIDE_NFULNL_LOGGER_NAME_OFF` | `"nfnetlink_log"` string (logger→name target) | `0x016a622a` |
-| `KMALLOC_CACHES_OFF` | `kmalloc_caches` | `0x0176c6f8` |
+| `SLIDE_NFULNL_LOGGER_NAME_OFF` | `"nfnetlink_log"` string (logger→name target) | `0x016a6574` |
+| `KMALLOC_CACHES_OFF` | `kmalloc_caches` | `0x0176cbb8` |
 | `SYSTEM_UNBOUND_WQ_OFF` | `system_unbound_wq` | `0x0223ae60` |
 | `SLIDE_NFULNL_LOGGER_OBJECT_OFF` | `nfulnl_logger` object | `0x02242a20` |
 | `INIT_TASK_OFF` | `init_task` | `0x0224f8c0` |
@@ -121,7 +121,7 @@ builds produce the same SHA-256:
 ```text
 artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so
 size 104128
-SHA-256 fe41102d089931906fafafdf02589a3f6fc2abe244bf01615f1cb22c320bf18b
+SHA-256 dcda0f9cf2d717517381b2448d7756c82d8f141ed169b79cbf7fd73d48955b92
 ```
 
 ## Stage 7: KernelSU late-load artifacts
