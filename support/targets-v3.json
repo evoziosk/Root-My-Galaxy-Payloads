@@ -211,8 +211,8 @@
         "size": 104128
       },
       "kernelsu": {
-        "url": "https://ds.jamsg.cn/d/Release/JSG-LLC/GalaxyRootKickUP/KSU/ksud-samsung-android14-6.1-kdp",
-        "size": 4879856
+        "url": "https://raw.githubusercontent.com/evoziosk/Root-My-Galaxy-Payloads/main/kernelsu/ksud-samsung-android14-6.1-kdp",
+        "size": 6532168
       }
     }
   ]
