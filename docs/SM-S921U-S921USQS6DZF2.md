@@ -121,7 +121,7 @@ builds produce the same SHA-256:
 ```text
 artifacts/e1q-S921USQS6DZF2/cve-2026-43499-app.so
 size 104128
-SHA-256 dcda0f9cf2d717517381b2448d7756c82d8f141ed169b79cbf7fd73d48955b92
+SHA-256 2e1410b7d849de2bbd2fcb5a29dd90b38539de336c284257e3c0ed265370eaa3
 ```
 
 ## Stage 7: KernelSU late-load artifacts
